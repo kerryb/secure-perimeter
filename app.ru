@@ -31,4 +31,4 @@ class SimpleProxy < Rack::Proxy
 end
 
 use Rack::Lint
-run SimpleProxy.new("www.wikipedia.org", 80)
+run SimpleProxy.new("orca.local", 80)
