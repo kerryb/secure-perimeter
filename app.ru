@@ -1,5 +1,21 @@
 require "rubygems"
 require "rack/proxy"
+require "oauth"
+require "ap"
+
+class Authenticator
+  include OAuth::Helper
+
+  def initialize app
+    @app = app
+  end
+
+  def call env
+    oauth_params = parse_header(env["HTTP_AUTHORIZATION"])
+    ap oauth_params
+    @app.call env
+  end
+end
 
 class SimpleProxy < Rack::Proxy
   def initialize host, port
@@ -30,5 +46,7 @@ class SimpleProxy < Rack::Proxy
   end
 end
 
+use Rack::Lint
+use Authenticator
 use Rack::Lint
 run SimpleProxy.new("orca.local", 80)
