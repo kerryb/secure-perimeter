@@ -1,0 +1,11 @@
+A very simple OAuth proxy, to act as a secure perimeter around web (REST)
+APIs. Currently just a quick and dirty spike.
+
+  gem in bundler # if necessary
+  bundle install
+  rackup app.ru
+
+  ruby client.rb # in another shell
+
+Listens on localhost:9292 by default, and proxies localhost:80 (proxying
+multiple servers coming soon).
