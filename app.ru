@@ -58,7 +58,5 @@ class SimpleProxy < Rack::Proxy
   end
 end
 
-use Rack::Lint
 use Authenticator
-use Rack::Lint
 run SimpleProxy.new("orca.local", 80)
