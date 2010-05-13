@@ -1,7 +1,6 @@
 require "rubygems"
 require "rack/proxy"
-require "oauth"
-require "ap"
+require "oauth/request_proxy/rack_request"
 
 class Authenticator
   include OAuth::Helper
@@ -11,9 +10,21 @@ class Authenticator
   end
 
   def call env
-    oauth_params = parse_header(env["HTTP_AUTHORIZATION"])
-    ap oauth_params
-    @app.call env
+    @host = env["HTTP_HOST"]
+    consumer_secret = "secret"
+    if OAuth::Signature.verify Rack::Request.new(env), :consumer_secret => consumer_secret
+      @app.call env
+    else
+      oauth_error
+    end
+  rescue OAuth::Signature::UnknownSignatureMethod
+    oauth_error
+  end
+
+  private
+  def oauth_error
+    [401, {"Content-Type" => "text/plain",
+      "WWW-Authenticate" => %(OAuth realm="http://#{@host}")}, "Invalid OAuth Request"]
   end
 end
 
