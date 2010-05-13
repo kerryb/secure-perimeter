@@ -13,4 +13,4 @@ consumer = OAuth::Consumer.new consumer_key, consumer_secret,
   :proxy => ENV["http_proxy"]
 
 access_token = OAuth::AccessToken.new consumer
-puts access_token.get("/", "Accept" => "application/xml")
+puts access_token.get "/"
