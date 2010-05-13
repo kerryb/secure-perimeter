@@ -13,7 +13,10 @@ class Authenticator
   def call env
     @host = env["HTTP_HOST"]
     consumer_secret = "secret"
-    if OAuth::Signature.verify Rack::Request.new(env), :consumer_secret => consumer_secret
+    signature = OAuth::Signature.build Rack::Request.new(env), :consumer_secret => consumer_secret
+    env["proxy_host"] = "localhost"
+    env["proxy_port"] = 80
+    if signature.verify
       @app.call env
     else
       oauth_error
@@ -29,15 +32,11 @@ class Authenticator
   end
 end
 
-class SimpleProxy < Rack::Proxy
-  def initialize host, port
-    @host, @port = host, port
-  end
-
+class Proxy < Rack::Proxy
   def rewrite_env env
     @perimeter_host = env["HTTP_HOST"]
-    env["HTTP_HOST"] = @host
-    env["SERVER_PORT"] = @port.to_s
+    @host = env["HTTP_HOST"] = env["proxy_host"]
+    @port = env["SERVER_PORT"] = env["proxy_port"]
     env
   end
 
@@ -59,4 +58,4 @@ class SimpleProxy < Rack::Proxy
 end
 
 use Authenticator
-run SimpleProxy.new("localhost", 80)
+run Proxy.new
