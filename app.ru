@@ -1,5 +1,6 @@
 require "rubygems"
 require "rack/proxy"
+require "oauth"
 require "oauth/request_proxy/rack_request"
 
 class Authenticator
