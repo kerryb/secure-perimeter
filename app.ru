@@ -16,6 +16,7 @@ class Authenticator
     @host = env["HTTP_HOST"]
     request_proxy = OAuth::RequestProxy.proxy Rack::Request.new(env)
     config = @keys[request_proxy.oauth_consumer_key]
+    return oauth_error unless config
     env["rewrite_urls"] = config["rewrite_urls"]
     signature = OAuth::Signature.build request_proxy, :consumer_secret => config["secret"]
     env["proxy_host"] = config["host"]

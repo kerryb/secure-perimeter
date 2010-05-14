@@ -9,6 +9,11 @@ options = {
   :http_method        => :post
 }
 
+puts "unknown key:"
+consumer = OAuth::Consumer.new "unknown_key", "secret", options
+access_token = OAuth::AccessToken.new consumer
+puts access_token.get "/"
+
 puts "key1:"
 consumer = OAuth::Consumer.new "key1", "secret1", options
 access_token = OAuth::AccessToken.new consumer
