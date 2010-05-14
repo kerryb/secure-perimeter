@@ -6,12 +6,12 @@ key1:
 key2:
   host: orca.local
   port: 80
-  rewrite_urls: true
+  rewrite_urls: false
   secret: secret2
 key3:
   host: orca.local
   port: 80
-  rewrite_urls: false
+  rewrite_urls: true
   secret: secret3
 key4:
   host: www.google.com
