@@ -3,7 +3,6 @@ require "yaml"
 require "rack/proxy"
 require "oauth"
 require "oauth/request_proxy/rack_request"
-require "ap"
 
 class Authenticator
   include OAuth::Helper
