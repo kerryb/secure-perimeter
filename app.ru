@@ -18,10 +18,9 @@ class Authenticator
     config = @keys[request_proxy.oauth_consumer_key]
     return oauth_error unless config
     env["rewrite_urls"] = config["rewrite_urls"]
-    signature = OAuth::Signature.build request_proxy, :consumer_secret => config["secret"]
     env["proxy_host"] = config["host"]
     env["proxy_port"] = config["port"]
-    if signature.verify
+    if OAuth::Signature.verify request_proxy, :consumer_secret => config["secret"]
       @app.call env
     else
       oauth_error
