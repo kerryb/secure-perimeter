@@ -1,21 +1,26 @@
 require "rubygems"
+require "yaml"
 require "rack/proxy"
 require "oauth"
 require "oauth/request_proxy/rack_request"
+require "ap"
 
 class Authenticator
   include OAuth::Helper
 
   def initialize app
     @app = app
+    @keys = YAML.load_file "config.yml"
   end
 
   def call env
     @host = env["HTTP_HOST"]
-    consumer_secret = "secret"
-    signature = OAuth::Signature.build Rack::Request.new(env), :consumer_secret => consumer_secret
-    env["proxy_host"] = "localhost"
-    env["proxy_port"] = 80
+    request_proxy = OAuth::RequestProxy.proxy Rack::Request.new(env)
+    config = @keys[request_proxy.oauth_consumer_key]
+    env["rewrite_urls"] = config["rewrite_urls"]
+    signature = OAuth::Signature.build request_proxy, :consumer_secret => config["secret"]
+    env["proxy_host"] = config["host"]
+    env["proxy_port"] = config["port"]
     if signature.verify
       @app.call env
     else
@@ -37,13 +42,14 @@ class Proxy < Rack::Proxy
     @perimeter_host = env["HTTP_HOST"]
     @host = env["HTTP_HOST"] = env["proxy_host"]
     @port = env["SERVER_PORT"] = env["proxy_port"]
+    @rewrite_urls = env["rewrite_urls"]
     env
   end
 
   def rewrite_response triplet
     status, headers, @response = triplet
     headers.delete "status"
-    if headers["Content-Type"].include? "text/html"
+    if @rewrite_urls
       [status, headers, self]
     else
       [status, headers, @response]

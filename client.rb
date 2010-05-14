@@ -3,8 +3,8 @@
 require 'rubygems'
 require 'oauth'
 
-consumer_key = "key"
-consumer_secret = "secret"
+consumer_key = "key1"
+consumer_secret = "secret1"
 
 consumer = OAuth::Consumer.new consumer_key, consumer_secret,
   :site               => "http://localhost:9292",

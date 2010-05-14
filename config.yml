@@ -1,0 +1,20 @@
+key1:
+  host: localhost
+  port: 80
+  rewrite_urls: true
+  secret: secret1
+key2:
+  host: orca.local
+  port: 80
+  rewrite_urls: true
+  secret: secret2
+key3:
+  host: orca.local
+  port: 80
+  rewrite_urls: false
+  secret: secret3
+key4:
+  host: www.google.com
+  port: 80
+  rewrite_urls: false
+  secret: secret4
