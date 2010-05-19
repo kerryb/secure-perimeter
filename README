@@ -8,4 +8,4 @@ A very simple two-legged OAuth proxy, to act as a secure perimeter around web
   ruby client.rb # in another shell
 
 Listens on localhost:9292 by default, and proxies servers as defined in
-config.yml (looked up using hte key provided by the client).
+config.yml (looked up using the key provided by the client).
