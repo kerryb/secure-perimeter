@@ -9,3 +9,19 @@ A very simple two-legged OAuth proxy, to act as a secure perimeter around web
 
 Listens on localhost:9292 by default, and proxies servers as defined in
 config.yml (looked up using the key provided by the client).
+
+
+DATABASE BRANCH
+
+Moved config to a simple database, just to see what difference a database query
+makes to performance.
+
+Prerequisites:
+
+* sqlite3 (or edit database.yml to use a different database)
+* sqlite3-ruby gem (or appropriate gem for database)
+
+Setup:
+
+  ruby schema.rb
+  ruby load_data.rb

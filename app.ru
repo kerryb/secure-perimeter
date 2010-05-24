@@ -3,24 +3,27 @@ require "yaml"
 require "rack/proxy"
 require "oauth"
 require "oauth/request_proxy/rack_request"
+require "db"
+require "user"
+require "key"
+require "application"
 
 class Authenticator
   include OAuth::Helper
 
   def initialize app
     @app = app
-    @keys = YAML.load_file "config.yml"
   end
 
   def call env
     @host = env["HTTP_HOST"]
     request_proxy = OAuth::RequestProxy.proxy Rack::Request.new(env)
-    config = @keys[request_proxy.oauth_consumer_key]
-    return oauth_error unless config
-    env["rewrite_urls"] = config["rewrite_urls"]
-    env["proxy_host"] = config["host"]
-    env["proxy_port"] = config["port"]
-    if OAuth::Signature.verify request_proxy, :consumer_secret => config["secret"]
+    key = Key.find_by_key request_proxy.oauth_consumer_key, :include => :application
+    return oauth_error unless key
+    env["rewrite_urls"] = key.application.rewrite_urls
+    env["proxy_host"] = key.application.host
+    env["proxy_port"] = key.application.port
+    if OAuth::Signature.verify request_proxy, :consumer_secret => key.secret
       @app.call env
     else
       oauth_error

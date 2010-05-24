@@ -1,5 +1,9 @@
 --- 
 dependencies: 
+  activerecord: 
+    group: 
+    - :default
+    version: = 2.3.7
   rack-proxy: 
     group: 
     - :default
@@ -13,13 +17,17 @@ dependencies:
     - :default
     version: = 1.1.0
 specs: 
+- activesupport: 
+    version: 2.3.7
+- activerecord: 
+    version: 2.3.7
 - oauth: 
     version: 0.4.0
 - rack: 
     version: 1.1.0
 - rack-proxy: 
     version: 0.3.3
-hash: e6cf9c5fa3ddf97cbd4ca92864d6c87e68fa5720
+hash: bd0f61cb1ae21831ce7bdf3568fac4eef92499df
 sources: 
 - Rubygems: 
     uri: http://gemcutter.org
